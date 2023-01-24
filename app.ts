@@ -13,22 +13,37 @@ app.get('/milk', (_req: Request, res: Response) => {
   }
 });
 
-// app.get('/api/puppies/:id', async (req: Request, res: Response) => {
-//   try {
-//       const { id } = req.params;
-//       const puppy = db.find(item => item.id === Number(id));
-//       if (!puppy) {
-//           return res.status(404).send('Puppy not found!');
-//       }
-//       const index = db.findIndex(item => item.id === Number(id));
-//       const query = puppy.breed.split(' ').join('+').toLowerCase()
-//       const img = await getPhoto(`${query}`)
-//       const newPuppy = {...puppy, img: img}
-//       db.splice(index, 1, newPuppy);
-//       return res.status(200).send(newPuppy);
-//   } catch (error) {
-//       return res.status(500).json({ error: error});
-//   }
-// });
+app.get('/milk/:id', async (req: Request, res: Response) => {
+  try {
+      const { id } = req.params;
+      const product = milkDB.results.find(item => item.id === id);
+      if (!product) {
+          return res.status(404).send('Product not found!');
+      }
+      return res.status(200).send(product);
+  } catch (error) {
+      return res.status(500).json({ error: error});
+  }
+});
+
+app.patch('/milk/:id', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { liter } = req.body;
+        const product = milkDB.results.find(item => item.id === id);
+        if (!product) {
+            return res.status(404).send('Product not found!');
+        }
+        const index = milkDB.results.findIndex(item => item.id === id);
+        const updatedMilk = {
+            ...product,
+            storage: product.storage - liter,
+        }
+        milkDB.results.splice(index, 1, updatedMilk);
+        return res.status(200).send(updatedMilk);
+    } catch (error) {
+        return res.status(500).json({ error: error});
+    }
+})
 
 export default app;

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,21 +24,34 @@ app.get('/milk', (_req, res) => {
         return res.status(500).json({ error: error });
     }
 });
-// app.get('/api/puppies/:id', async (req: Request, res: Response) => {
-//   try {
-//       const { id } = req.params;
-//       const puppy = db.find(item => item.id === Number(id));
-//       if (!puppy) {
-//           return res.status(404).send('Puppy not found!');
-//       }
-//       const index = db.findIndex(item => item.id === Number(id));
-//       const query = puppy.breed.split(' ').join('+').toLowerCase()
-//       const img = await getPhoto(`${query}`)
-//       const newPuppy = {...puppy, img: img}
-//       db.splice(index, 1, newPuppy);
-//       return res.status(200).send(newPuppy);
-//   } catch (error) {
-//       return res.status(500).json({ error: error});
-//   }
-// });
+app.get('/milk/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const product = milkDB_json_1.default.results.find(item => item.id === id);
+        if (!product) {
+            return res.status(404).send('Product not found!');
+        }
+        return res.status(200).send(product);
+    }
+    catch (error) {
+        return res.status(500).json({ error: error });
+    }
+}));
+app.patch('/milk/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { liter } = req.body;
+        const product = milkDB_json_1.default.results.find(item => item.id === id);
+        if (!product) {
+            return res.status(404).send('Product not found!');
+        }
+        const index = milkDB_json_1.default.results.findIndex(item => item.id === id);
+        const updatedMilk = Object.assign(Object.assign({}, product), { storage: product.storage - liter });
+        milkDB_json_1.default.results.splice(index, 1, updatedMilk);
+        return res.status(200).send(updatedMilk);
+    }
+    catch (error) {
+        return res.status(500).json({ error: error });
+    }
+}));
 exports.default = app;

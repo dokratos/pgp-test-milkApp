@@ -1,14 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import Milk from '../../types'
-import MilkCard from './MilkCard';
+import MilkList from './MilkList';
+import Pagination from './Pagination';
 
 
-const ProductList = () => {
+const Landing = () => {
   const [products, setProducts] = useState<Milk[]>([]);
   const [category, setCategory] = useState<string[]>([]);
   const [filter, setFilter] = useState<Milk[]>([]);
   const [text, setText] = useState<string>('')
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(9);
 
   useEffect(() => {
     const getMilk = async () => {
@@ -52,6 +56,11 @@ const ProductList = () => {
     }
   }
 
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const currentData = filter.slice(firstIndex, lastIndex);
+  const totalPages = Math.ceil(filter.length / recordsPerPage);
+
   return (
     <main>
        <div className="relative">
@@ -60,7 +69,7 @@ const ProductList = () => {
         </div>
         <input
         type='text'
-        placeholder='Search'
+        placeholder='Search by Name..'
         value={text}
         onChange={e => setText(e.target.value)}
         className='block w-80 p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-50'
@@ -80,16 +89,20 @@ const ProductList = () => {
           value={milkType}>{milkType}</option>
           )}
       </select>
-      <section className='flex flex-row flex-wrap justify-around'>
-        {filter. map((milk, i) =>
-          <MilkCard 
-          product={milk}
-          key={i}
-          />
-          )}
-      </section>
+      <MilkList 
+      data={currentData}
+      />
+      <Pagination
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      totalPages={totalPages}
+      // recordsPerPage={recordsPerPage}
+      // prevPage={prevPage}
+      // nextPage={nextPage}
+      // data={filter}
+      />
     </main>
   )
 }
 
-export default ProductList
+export default Landing
