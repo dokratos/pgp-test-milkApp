@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const MilkCard_1 = __importDefault(require("./MilkCard"));
 const MilkList = ({ data }) => {
-    return (<section className='flex flex-row flex-wrap justify-around'>
+    return (<section className='flex flex-row flex-wrap justify-around mt-20 lg:mx-40'>
     {data.map((milk, i) => <MilkCard_1.default product={milk} key={i}/>)}
   </section>);
 };
