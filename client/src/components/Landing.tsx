@@ -9,7 +9,6 @@ const Landing = () => {
   const [category, setCategory] = useState<string[]>([]);
   const [filter, setFilter] = useState<Milk[]>([]);
   const [text, setText] = useState<string>('')
-
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(9);
 
@@ -38,20 +37,20 @@ const Landing = () => {
   const handleFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event) {
       if (event.target.value === 'All') return setFilter(products);
-
       const filtered = products.filter(item => item.type === event.target.value);
       setFilter(filtered);
+      setCurrentPage(1);
     }
   };
 
   const handleSearch = () => {
-    console.log(text)
     if (text.length > 0) {
       const regex = new RegExp(text, 'i');
       const searchResult = products.filter(milk => {
         return milk.name.match(regex);
       })
       setFilter(searchResult);
+      setCurrentPage(1);
       setText('')
     }
   }
@@ -63,7 +62,9 @@ const Landing = () => {
 
   return (
     <main>
-       <form className="flex flex-row justify-between relative my-10 mx-5 lg:mx-20">
+       <form className="flex flex-row justify-between relative my-10 mx-5 lg:mx-20"
+       onSubmit={e => e.preventDefault()}
+       >
         <button
         onClick={handleSearch}
         className="absolute inset-y-0 left-0 flex items-center pl-3">

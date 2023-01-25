@@ -42,7 +42,7 @@ const milk_png_1 = __importDefault(require("../milk.png"));
 const Alert_1 = require("./Alert");
 const MilkPage = () => {
     const [milkProduct, setMilkProduct] = (0, react_1.useState)({});
-    const [sliderValue, setSliderValue] = (0, react_1.useState)('0');
+    const [sliderValue, setSliderValue] = (0, react_1.useState)('1');
     const [showAlert, setShowAlert] = (0, react_1.useState)(false);
     const { id } = (0, react_router_dom_1.useParams)();
     (0, react_1.useEffect)(() => {
@@ -55,7 +55,7 @@ const MilkPage = () => {
     if (showAlert) {
         setTimeout(() => {
             setShowAlert(false);
-        }, 1000);
+        }, 1500);
     }
     ;
     const handleOrder = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,18 +65,27 @@ const MilkPage = () => {
         setMilkProduct(order.data);
         return order;
     });
-    return (<main className='static'>
-      <react_router_dom_1.Link to='/'>Back to Home</react_router_dom_1.Link>
-      <section className='absolute inset-x-1/4 top-52  flex flex-row justify-beteween '>
-        <img src={milk_png_1.default} className='w-60 p-5'/>
-        <article className='p-5 bg-white rounded-lg'>
+    return (<main className='relative'>
+      <react_router_dom_1.Link to='/' className='h-7 absolute left-1/4 top-24 flex flex-row text-gray-600'>
+        <svg fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className='inline'>
+        <path className="stroke-rose-500 stroke-2 hover:stroke-2" strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+        </svg>Back
+      </react_router_dom_1.Link>
+      <section className='absolute top-1/2 left-1/4 flex flex-col lg:flex-row top-56 left-32 md:flex-row top-32'>
+        <img src={milk_png_1.default} className='w-60 p-5 lg:w-80'/>
+        <article className='p-5 bg-white rounded-lg lg:p-10'>
           <h1 className='font-medium mb-2'>{milkProduct.name}</h1>
           <p className='text-gray-700'>{milkProduct.type}</p>
           <p className='text-sm mb-4'>{milkProduct.storage}l in stock</p>
-          <input type='range' min='0' max={milkProduct.storage} value={sliderValue} onChange={(e) => setSliderValue(e.target.value)} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700'>
-          </input>
-          <p>{sliderValue} liter</p>
-          <button className='text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-800' onClick={handleOrder}>Order!</button>
+         {milkProduct.storage > 0 ?
+            <>
+          <div className='relative'>
+              <input type='range' min='1' max={milkProduct.storage} value={sliderValue} onChange={(e) => setSliderValue(e.target.value)} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-rose-400 lg:mt-10'>
+              </input>
+              <output>{sliderValue}l</output>
+            </div>
+            <button className='text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 font-medium rounded-lg text-sm px-4 py-2' onClick={handleOrder}>Order!</button>
+          </> : <p className='text-white bg-rose-700 font-medium rounded-lg text-sm px-4 py-2'>Sorry, out of Stock!</p>}
         </article>
           {showAlert && <Alert_1.Alert />}
       </section>

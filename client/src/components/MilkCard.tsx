@@ -13,7 +13,7 @@ const MilkCard = ({product}: MilkProps) => {
       <Link to={`/${product.id}`}>
         <img src={milk} className='w-40 my-6 ml-16 '/>
         <div className='flex flex-wrap justify-between bg-white rounded-b-lg p-5 text-gray-700'>
-          <h1 className='font-medium mb-2'>{product.name}</h1>
+          <h1 className='font-medium mb-2 w-full'>{product.name}</h1>
           <p className='text-sm'>{product.type}</p>
           <p className='text-sm'>{product.storage}l in stock</p>
         </div>
