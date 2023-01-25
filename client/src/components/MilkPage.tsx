@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useAppSelector } from '../hooks/reduxHooks';
 import Milk from '../../types';
 import milk from '../milk.png';
 import { Alert } from './Alert';
@@ -10,6 +11,9 @@ const MilkPage = () => {
   const [sliderValue, setSliderValue] = useState<string>('1');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const { id } = useParams();
+
+  // const milkProduct = useAppSelector(state => state.milk.milks.find(item => item.id === id));
+  // console.log(milkProduct, 'the milk is here')
 
   useEffect(() => {
     const getMilk = async () => {

@@ -45,6 +45,8 @@ const MilkPage = () => {
     const [sliderValue, setSliderValue] = (0, react_1.useState)('1');
     const [showAlert, setShowAlert] = (0, react_1.useState)(false);
     const { id } = (0, react_router_dom_1.useParams)();
+    // const milkProduct = useAppSelector(state => state.milk.milks.find(item => item.id === id));
+    // console.log(milkProduct, 'the milk is here')
     (0, react_1.useEffect)(() => {
         const getMilk = () => __awaiter(void 0, void 0, void 0, function* () {
             const product = yield axios_1.default.get(`milk/${id}`);

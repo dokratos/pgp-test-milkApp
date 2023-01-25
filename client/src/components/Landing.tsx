@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import { selectMilk, fetchMilk } from '../slices/milkSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import Milk from '../../types'
 import MilkList from './MilkList';
 import Pagination from './Pagination';
 
 const Landing = () => {
-  const [products, setProducts] = useState<Milk[]>([]);
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(selectMilk);
+  const milkStatus = useAppSelector(state => state.milk.status)
   const [category, setCategory] = useState<string[]>([]);
   const [filter, setFilter] = useState<Milk[]>([]);
   const [text, setText] = useState<string>('')
@@ -13,13 +16,11 @@ const Landing = () => {
   const [recordsPerPage] = useState(9);
 
   useEffect(() => {
-    const getMilk = async () => {
-      const milkList = await axios.get('/milk');
-      setProducts(milkList.data.db.results);
-      setFilter(milkList.data.db.results);
+    if (milkStatus === 'idle') {
+      dispatch(fetchMilk());
     }
-    getMilk();
-  }, [])
+    setFilter(products)
+  }, [milkStatus, dispatch])
   
   useEffect(() => {
     const getFilter = () => {
@@ -32,7 +33,6 @@ const Landing = () => {
     } 
     getFilter();
   }, [products])
-
 
   const handleFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event) {

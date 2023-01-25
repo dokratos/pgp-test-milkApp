@@ -22,38 +22,30 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const axios_1 = __importDefault(require("axios"));
+const milkSlice_1 = require("../slices/milkSlice");
+const reduxHooks_1 = require("../hooks/reduxHooks");
 const MilkList_1 = __importDefault(require("./MilkList"));
 const Pagination_1 = __importDefault(require("./Pagination"));
 const Landing = () => {
-    const [products, setProducts] = (0, react_1.useState)([]);
+    const dispatch = (0, reduxHooks_1.useAppDispatch)();
+    const products = (0, reduxHooks_1.useAppSelector)(milkSlice_1.selectMilk);
+    const milkStatus = (0, reduxHooks_1.useAppSelector)(state => state.milk.status);
     const [category, setCategory] = (0, react_1.useState)([]);
     const [filter, setFilter] = (0, react_1.useState)([]);
     const [text, setText] = (0, react_1.useState)('');
     const [currentPage, setCurrentPage] = (0, react_1.useState)(1);
     const [recordsPerPage] = (0, react_1.useState)(9);
     (0, react_1.useEffect)(() => {
-        const getMilk = () => __awaiter(void 0, void 0, void 0, function* () {
-            const milkList = yield axios_1.default.get('/milk');
-            setProducts(milkList.data.db.results);
-            setFilter(milkList.data.db.results);
-        });
-        getMilk();
-    }, []);
+        if (milkStatus === 'idle') {
+            dispatch((0, milkSlice_1.fetchMilk)());
+        }
+        setFilter(products);
+    }, [milkStatus, dispatch]);
     (0, react_1.useEffect)(() => {
         const getFilter = () => {
             const categoryArray = products.map(milk => milk.type);
