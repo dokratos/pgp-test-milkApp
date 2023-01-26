@@ -24,6 +24,7 @@ app.get('/milk', (_req, res) => {
         return res.status(500).json({ error: error });
     }
 });
+/// route unused
 app.get('/milk/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
@@ -40,7 +41,7 @@ app.get('/milk/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 app.patch('/milk/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { liter } = req.body;
+        const { liter } = req.body.data;
         const product = milkDB_json_1.default.results.find(item => item.id === id);
         if (!product) {
             return res.status(404).send('Product not found!');

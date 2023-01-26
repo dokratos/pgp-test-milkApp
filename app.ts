@@ -13,6 +13,7 @@ app.get('/milk', (_req: Request, res: Response) => {
   }
 });
 
+/// route unused
 app.get('/milk/:id', async (req: Request, res: Response) => {
   try {
       const { id } = req.params;
@@ -29,7 +30,7 @@ app.get('/milk/:id', async (req: Request, res: Response) => {
 app.patch('/milk/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { liter } = req.body;
+        const { liter } = req.body.data;
         const product = milkDB.results.find(item => item.id === id);
         if (!product) {
             return res.status(404).send('Product not found!');

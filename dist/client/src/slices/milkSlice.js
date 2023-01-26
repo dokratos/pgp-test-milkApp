@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectMilk = exports.milkSlice = exports.fetchMilk = void 0;
+exports.selectMilk = exports.milkSlice = exports.patchMilk = exports.fetchMilk = void 0;
 const toolkit_1 = require("@reduxjs/toolkit");
 const axios_1 = __importDefault(require("axios"));
 const initialState = {
@@ -23,6 +23,10 @@ exports.fetchMilk = (0, toolkit_1.createAsyncThunk)('milk/fetchMilk', () => __aw
     const response = yield axios_1.default.get('/milk');
     return response.data.db.results;
 }));
+exports.patchMilk = (0, toolkit_1.createAsyncThunk)('milk/patchMilk', (data) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield axios_1.default.patch(`milk/${data.id}`, { data });
+    return (yield order.data);
+}));
 exports.milkSlice = (0, toolkit_1.createSlice)({
     name: 'milk',
     initialState,
@@ -32,6 +36,10 @@ exports.milkSlice = (0, toolkit_1.createSlice)({
             .addCase(exports.fetchMilk.fulfilled, (state, action) => {
             state.status = 'loaded';
             state.milks = state.milks.concat(action.payload);
+        })
+            .addCase(exports.patchMilk.fulfilled, (state, action) => {
+            const index = state.milks.findIndex(item => item.id === action.payload.id);
+            state.milks.splice(index, 1, action.payload);
         });
     }
 });
